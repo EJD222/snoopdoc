@@ -9,6 +9,23 @@ module.exports = {
       devtoolModuleFilenameTemplate: '[absolute-resource-path]',
     }),
   },
+  resolve: {
+    alias: {
+      'class-transformer/storage': require.resolve(
+        'class-transformer/cjs/storage',
+      ),
+    },
+  },
+  ignoreWarnings: [
+    {
+      module: /@fastify[\\/]view/,
+      message: /Critical dependency: the request of a dependency is an expression/,
+    },
+    {
+      module: /node_modules[\\/]\.pnpm[\\/]ret@/,
+      message: /Failed to parse source map/,
+    },
+  ],
   plugins: [
     new NxAppWebpackPlugin({
       target: 'node',
