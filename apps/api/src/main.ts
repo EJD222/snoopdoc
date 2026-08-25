@@ -35,6 +35,8 @@ async function bootstrap() {
     Logger.log(
         `🚀 Application is running on: http://localhost:${port}/${globalPrefix}`,
     );
+
+    app.enableShutdownHooks();
 }
 
 bootstrap();

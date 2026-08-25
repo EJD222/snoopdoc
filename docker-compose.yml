@@ -1,0 +1,16 @@
+services:
+  database:
+    image: postgres:18
+    container_name: snoopdoc-postgres
+    environment:
+      POSTGRES_USER: root_user
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: snoopdoc
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql
+      - ./initdb:/docker-entrypoint-initdb.d
+
+volumes:
+  postgres-data:
