@@ -11,3 +11,5 @@ allowBuilds:
   unrs-resolver: false
   '@nestjs/core': false
   '@scarf/scarf': false
+  esbuild: false
+  argon2: false

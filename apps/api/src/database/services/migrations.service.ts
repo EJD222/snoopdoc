@@ -21,6 +21,7 @@ export class MigrationsService implements OnModuleInit {
     private async runMigrations(): Promise<void> {
 
         const MIGRATION_LOCK_KEY = getEnv<string>('MIGRATION_LOCK_KEY');
+        console.log('__dirname:', __dirname);
 
         const migrationsFolder = path.join(__dirname, '../drizzle');
         this.logger.log(`Migrations folder:' ${migrationsFolder}`);
