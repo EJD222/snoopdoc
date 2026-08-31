@@ -3,11 +3,13 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from '@/config/config.module';
 import { DatabaseModule } from '@/database/database.module';
+import { CqrsModule } from '@nestjs/cqrs';
 
 @Module({
     imports: [
         ConfigModule,
-        DatabaseModule
+        DatabaseModule,
+        CqrsModule.forRoot()
     ],
     controllers: [AppController],
     providers: [AppService],

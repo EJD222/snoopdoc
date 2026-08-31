@@ -6,7 +6,7 @@ import { Pool } from 'pg';
 import { drizzle } from 'drizzle-orm/node-postgres';
 import { migrate } from 'drizzle-orm/node-postgres/migrator';
 import * as schema from '@/database/schema';
-import { buildPoolConfig } from '../utils/pool';
+import { buildPoolConfig } from '../utils/pool.util';
 
 @Injectable()
 export class MigrationsService implements OnModuleInit {

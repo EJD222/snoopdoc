@@ -2,7 +2,7 @@ import { Injectable, Logger, OnModuleDestroy, OnModuleInit } from '@nestjs/commo
 import { Pool } from 'pg';
 import { TDatabase } from '../types/database';
 import { ConfigService } from '@nestjs/config';
-import { buildPoolConfig, IPoolStats } from '../utils/pool';
+import { buildPoolConfig, IPoolStats } from '../utils/pool.util';
 import { drizzle } from 'drizzle-orm/node-postgres';
 import * as schema from '@/database/schema';
 import { getEnv } from '@/config/utils/env';

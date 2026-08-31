@@ -1,6 +1,6 @@
 import { Type, type } from "arktype";
 import { TBrand } from "../../utils/brand.js";
-import { Timestamp } from "../../utils/timestamps.js";
+import { Timestamp } from "../../utils/timestamp.js";
 
 export type TUserId = TBrand<string, "userId">
 export const UserId: Type<TUserId> = type('string.uuid#userId');
