@@ -66,13 +66,16 @@
     "webpack-dev-server": "^5.2.1"
   },
   "dependencies": {
+    "@fastify/cookie": "^11.1.2",
+    "@fastify/secure-session": "^8.3.0",
     "@nestjs/common": "^11.0.0",
     "@nestjs/core": "^11.0.0",
-    "@nestjs/cqrs": "^12.0.0",
+    "@nestjs/cqrs": "^11.0.3",
     "@nestjs/platform-express": "^11.0.0",
     "arktype": "^2.2.3",
     "axios": "^1.6.0",
     "dotenv": "^17.4.2",
+    "fastify": "^5.12.1",
     "next": "~16.1.6",
     "pg": "^8.23.0",
     "react": "^19.0.0",

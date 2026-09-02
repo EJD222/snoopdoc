@@ -1,0 +1,4 @@
+name: snoopdoc
+variables:
+  - name: baseUrl
+    value: localhost:3001/api

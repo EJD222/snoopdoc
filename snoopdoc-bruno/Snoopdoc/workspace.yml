@@ -1,0 +1,12 @@
+opencollection: 1.0.0
+info:
+  name: "Snoopdoc"
+  type: workspace
+
+collections:
+  - name: "Session"
+    path: "collections/Session"
+
+specs:
+
+docs: ''

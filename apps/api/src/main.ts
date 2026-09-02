@@ -7,6 +7,8 @@ import {
 } from '@nestjs/platform-fastify';
 import qs from 'qs';
 import { createSwagger } from './utils/swagger';
+import secureSession from '@fastify/secure-session';
+import { sessionOptions } from './config/utils/session';
 
 async function bootstrap() {
     const app = await NestFactory.create<NestFastifyApplication>(
@@ -18,6 +20,8 @@ async function bootstrap() {
             }
         })
     );
+
+    await app.register(secureSession, sessionOptions);
 
     const globalPrefix = 'api';
 

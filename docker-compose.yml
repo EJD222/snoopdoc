@@ -11,6 +11,16 @@ services:
     volumes:
       - postgres-data:/var/lib/postgresql
       - ./initdb:/docker-entrypoint-initdb.d
+  
+  redis:
+    image: redis:8-alpine
+    container_name: snoopdoc-redis
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis-data:/data
+    restart: unless-stopped
 
 volumes:
   postgres-data:
+  redis-data:

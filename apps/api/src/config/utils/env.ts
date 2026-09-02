@@ -10,14 +10,27 @@ export const EnvSchema = type({
     DB_NAME: 'string',
     DB_USER: 'string',
     DB_PASSWORD: 'string',
+    DB_ROOT_USER: 'string',
     MIGRATION_LOCK_KEY: type('string').narrow((value, ctx) => {
         if (Buffer.byteLength(value) < 8) {
             ctx.reject({ message: 'MIGRATION_LOCK_KEY must be at least 8 bytes.' });
         }
         return true;
     }),
-    DB_ROOT_USER: 'string'
-} as const);
+    REDIS_URL: 'string',
+    SESSION_SECRET: type('string').narrow((value, ctx) => {
+        if (Buffer.byteLength(value) < 32) {
+            ctx.reject({ message: 'SESSION_SECRET must be at least 32 bytes.' });
+        }  
+        return true;
+    }),
+    SESSION_SALT: type('string').narrow((value, ctx) => {
+        if (Buffer.byteLength(value) < 16) {
+            ctx.reject({ message: 'SESSION_SALT must be at least 16 bytes.' });
+        }
+        return true;
+    })
+})
 export const TEnvKeys = EnvSchema.keyof();
 
 export const validateEnv = (config: Record<string, unknown>) => {
@@ -36,7 +49,7 @@ export function getEnv<T>(
     key: string,
     config?: ConfigService | undefined,
 ): T {
-    const value = config?.get<T>(key) ?? process.env[key];
+    const value = config?.getOrThrow<T>(key) ?? process.env[key];
 
     if (value === undefined || value === null || value === '') {
         throw new Error(
