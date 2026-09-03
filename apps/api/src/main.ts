@@ -9,6 +9,8 @@ import qs from 'qs';
 import { createSwagger } from './utils/swagger';
 import secureSession from '@fastify/secure-session';
 import { sessionOptions } from './config/utils/session';
+import { csrfOptions } from './config/utils/csrf';
+import fastifyCsrf from '@fastify/csrf-protection';
 
 async function bootstrap() {
     const app = await NestFactory.create<NestFastifyApplication>(
@@ -22,6 +24,7 @@ async function bootstrap() {
     );
 
     await app.register(secureSession, sessionOptions);
+    await app.register(fastifyCsrf, csrfOptions);   
 
     const globalPrefix = 'api';
 

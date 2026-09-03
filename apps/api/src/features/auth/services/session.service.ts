@@ -1,6 +1,6 @@
 import { CacheService } from '@/features/cache/cache.service';
 import { Injectable } from '@nestjs/common';
-import { SessionData } from '../../types/session';
+import { SessionData } from '../types/session';
 
 @Injectable()
 export class SessionService {

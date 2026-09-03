@@ -13,7 +13,21 @@ export const CurrentUser = type({
 export type TCurrentUser = typeof CurrentUser.infer;
 
 export const RegisterUserRequest = type({
-    '...': CurrentUser,
+    '...': CurrentUser.omit(
+        'id',
+    ),
     password: Password
 })
 export type TRegisterUserRequest = typeof RegisterUserRequest.infer;
+
+export const LoginUserRequest = type({
+    '...': CurrentUser.pick('email'),
+    password: Password
+})
+export type TLoginUserRequest = typeof LoginUserRequest.infer;
+
+export const LoginUserResponse = type({
+    user: CurrentUser,
+    sessionId: type('string'),
+})
+export type TLoginUserResponse = typeof LoginUserResponse.infer;

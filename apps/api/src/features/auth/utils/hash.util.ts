@@ -10,3 +10,10 @@ export async function hashPassword(password: string) {
 
     return hashedPassword;
 }
+
+export async function verifyPassword(
+    hashedPassword: string,
+    password: string,
+) {
+    return await argon2.verify(hashedPassword, password);
+}

@@ -18,7 +18,7 @@ export class RegisterUserCommand extends Command<TCurrentUser> {
 @CommandHandler(RegisterUserCommand)
 export class RegisterUserCommandHandler implements ICommandHandler<RegisterUserCommand, TCurrentUser>{
     constructor(
-		private readonly rls: RlsService,
+		private readonly rlsService: RlsService,
 	) {}
 
     private async isEmailRegistered(
@@ -40,7 +40,7 @@ export class RegisterUserCommandHandler implements ICommandHandler<RegisterUserC
         const userData = RegisterUserRequest.assert(command.data)
         const passwordHash = await hashPassword(userData.password);
 
-        return this.rls.withUserContext({ bypassRls: true }, async (tx) => {
+        return this.rlsService.withUserContext({ bypassRls: true }, async (tx) => {
             if (await this.isEmailRegistered(tx, userData.email)) {
                 throw new ConflictException(
                     'Email is already registered.',
