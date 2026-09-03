@@ -13,3 +13,5 @@ allowBuilds:
   '@scarf/scarf': false
   esbuild: false
   argon2: false
+overrides:
+  fastify: '5.12.1'
