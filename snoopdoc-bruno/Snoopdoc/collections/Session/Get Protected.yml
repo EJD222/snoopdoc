@@ -1,11 +1,11 @@
 info:
-  name: Create Session
+  name: Get Protected
   type: http
-  seq: 1
+  seq: 3
 
 http:
-  method: POST
-  url: "{{baseUrl}}/auth/session"
+  method: GET
+  url: "{{baseUrl}}/auth/protected"
   auth: inherit
 
 settings:
@@ -13,3 +13,4 @@ settings:
   timeout: 0
   followRedirects: true
   maxRedirects: 5
+  forwardAuthorizationHeader: false
