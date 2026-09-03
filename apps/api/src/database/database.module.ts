@@ -7,6 +7,6 @@ import { RlsService } from './services/rls.service';
 @Module({
     imports: [],
     providers: [ConnectionService, MigrationsService, RlsService],
-    exports: []
+    exports: [RlsService]
 })
 export class DatabaseModule {}

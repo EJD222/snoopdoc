@@ -10,7 +10,7 @@ export const usersTable = pgTable(
         deletedAt: timestamp('deleted_at', { withTimezone: true}),
         id: uuid('id').$type<TUserId>().defaultRandom().primaryKey(),
         firstName: varchar('first_name', { length: 255 }).notNull(),
-        lastName: varchar('firstName', { length: 255 }).notNull(),
+        lastName: varchar('last_name', { length: 255 }).notNull(),
         email: varchar("email", { length: 255 }).notNull().unique(),
         password: varchar('password', { length: 255 }).notNull(),
     } satisfies Record<TUserKeys, unknown>

@@ -17,7 +17,7 @@ export class RlsService {
         }
 
         if (context.bypassRls) {
-            await tx.execute(sql`select set_config('app.bypass_rls, ${context.bypassRls}, true)`);
+            await tx.execute(sql`select set_config('app.bypass_rls', ${context.bypassRls}, true)`);
         }
     }
 
