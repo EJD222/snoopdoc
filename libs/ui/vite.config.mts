@@ -1,13 +1,20 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import path from 'node:path';
+
 export default defineConfig(() => ({
   root: import.meta.dirname,
+
   cacheDir: '../../node_modules/.vite/libs/ui',
+
   plugins: [react()],
-  // Uncomment this if you are using workers.
-  // worker: {
-  //  plugins: [],
-  // },
+
+  resolve: {
+    alias: {
+      '@': path.resolve(import.meta.dirname, './src'),
+    },
+  },
+
   test: {
     name: '@snoopdoc/ui',
     watch: false,
