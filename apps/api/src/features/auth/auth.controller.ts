@@ -1,11 +1,12 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { SessionService } from './services/session.service';
-import type { FastifyRequest } from 'fastify';
+import type { FastifyReply, FastifyRequest } from 'fastify';
 import { AuthGuard } from './guards/auth.guard';
 import type { TLoginUserRequest, TRegisterUserRequest } from '@snoopdoc/types';
 import { LoginUserCommand } from './commands/login-user.command';
 import { CommandBus } from '@nestjs/cqrs';
 import { RegisterUserCommand } from './commands/register-user.command';
+import { CsrfGuard } from './guards/csrf.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -15,6 +16,7 @@ export class AuthController {
     ) {}
 
     @Post('login')
+    @UseGuards(CsrfGuard)
     async createSession(
         @Req() req: FastifyRequest,
         @Body() body: TLoginUserRequest,
@@ -52,6 +54,13 @@ export class AuthController {
         };
     }
 
+    @Get('csrf')
+    getCsrf(@Res({ passthrough: true }) reply: FastifyReply) {
+        return {
+            csrfToken: reply.generateCsrf(),
+        };
+    }
+    
     @UseGuards(AuthGuard)
     @Get('protected')
     getProtected(@Req() request: FastifyRequest) {
