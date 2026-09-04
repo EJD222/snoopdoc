@@ -54,7 +54,7 @@ export class AuthController {
         };
     }
 
-    @Get('csrf')
+    @Get('csrf-token')
     getCsrf(@Res({ passthrough: true }) reply: FastifyReply) {
         return {
             csrfToken: reply.generateCsrf(),
