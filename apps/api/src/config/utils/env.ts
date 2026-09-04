@@ -29,7 +29,8 @@ export const EnvSchema = type({
             ctx.reject({ message: 'SESSION_SALT must be at least 16 bytes.' });
         }
         return true;
-    })
+    }),
+    FRONT_END_URL: 'string',
 })
 export const TEnvKeys = EnvSchema.keyof();
 

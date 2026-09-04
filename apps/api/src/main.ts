@@ -11,6 +11,7 @@ import secureSession from '@fastify/secure-session';
 import { sessionOptions } from './config/utils/session';
 import { csrfOptions } from './config/utils/csrf';
 import fastifyCsrf from '@fastify/csrf-protection';
+import { corsOptions } from './config/utils/cors';
 
 async function bootstrap() {
     const app = await NestFactory.create<NestFastifyApplication>(
@@ -20,12 +21,15 @@ async function bootstrap() {
                 querystringParser: (str) => qs.parse(str),
                 ignoreTrailingSlash: true,
             }
-        })
+        }),
+        {
+            cors: corsOptions,
+        }
     );
 
     await app.register(secureSession, sessionOptions);
     await app.register(fastifyCsrf, csrfOptions);   
-
+    
     const globalPrefix = 'api';
 
     app.setGlobalPrefix(globalPrefix);
