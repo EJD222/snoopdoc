@@ -3,8 +3,14 @@
   "version": "0.0.1",
   "private": true,
   "dependencies": {
+    "@snoopdoc/types": "workspace:*",
+    "@snoopdoc/ui": "workspace:*",
+    "@tailwindcss/postcss": "^4.3.3",
     "next": "~16.1.6",
+    "postcss": "^8.5.27",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "tailwindcss": "^4.3.3",
+    "xior": "^0.8.4"
   }
 }
