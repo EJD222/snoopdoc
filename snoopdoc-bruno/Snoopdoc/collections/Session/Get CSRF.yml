@@ -5,7 +5,7 @@ info:
 
 http:
   method: GET
-  url: ""
+  url: "{{baseUrl}}/auth/csrf-token"
   auth: inherit
 
 settings:

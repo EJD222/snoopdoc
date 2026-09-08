@@ -6,6 +6,9 @@ info:
 http:
   method: POST
   url: "{{baseUrl}}/auth/login"
+  headers:
+    - name: x-csrf-token
+      value: KVcQ1NJu-eRNQj3kFUUqHWt4v_jNL47jJkwqXVGxh-BdO_qiMk8M
   body:
     type: json
     data: |-
