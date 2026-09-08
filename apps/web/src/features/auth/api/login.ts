@@ -1,13 +1,15 @@
-import { api } from '@/lib/api/client';
-import type { TLoginUserRequest, TLoginUserResponse } from '@snoopdoc/types';
+import { api, requestData } from '@/lib/api/client';
+import type { TCurrentUser, TLoginUserRequest } from '@snoopdoc/types';
 import { getCsrfToken } from './get-csrf-token';
 
-export async function login(data: TLoginUserRequest): Promise<TLoginUserResponse> {
-    const response = await api.post('auth/login', data, {
-        headers: {
-            'X-CSRF-Token': await getCsrfToken(),
-        },
-    });
+export function login(data: TLoginUserRequest): Promise<TCurrentUser> {
+    return requestData(async () => {
+        const csrfToken = await getCsrfToken();
 
-    return response.data;
+        return api.post('auth/login', data, {
+            headers: {
+                'X-CSRF-Token': csrfToken,
+            },
+        });
+    });
 }

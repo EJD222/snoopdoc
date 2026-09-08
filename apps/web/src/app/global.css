@@ -1,1 +1,2 @@
-@import "tailwindcss";
+@import "@snoopdoc/ui/globals.css";
+@source "../../../../libs/ui/src";
