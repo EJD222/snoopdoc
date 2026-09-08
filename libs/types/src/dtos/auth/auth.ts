@@ -22,12 +22,9 @@ export type TRegisterUserRequest = typeof RegisterUserRequest.infer;
 
 export const LoginUserRequest = type({
     '...': CurrentUser.pick('email'),
-    password: Password
+    password: 'string'
 })
 export type TLoginUserRequest = typeof LoginUserRequest.infer;
 
-export const LoginUserResponse = type({
-    user: CurrentUser,
-    sessionId: type('string'),
-})
-export type TLoginUserResponse = typeof LoginUserResponse.infer;
+export const LoginUserResponse = CurrentUser;
+export type TLoginUserResponse = TCurrentUser;

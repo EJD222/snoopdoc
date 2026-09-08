@@ -1,13 +1,18 @@
 import { RlsService } from "@/database/services/rls.service";
 import { Command, CommandHandler, ICommandHandler } from "@nestjs/cqrs";
-import { CurrentUser, LoginUserRequest, TLoginUserRequest, TLoginUserResponse } from "@snoopdoc/types";
+import { CurrentUser, LoginUserRequest, TCurrentUser, TLoginUserRequest } from "@snoopdoc/types";
 import { eq } from "drizzle-orm";
 import * as schema from '@/database/schema';
 import { verifyPassword } from "../utils/hash.util";
 import { UnauthorizedException } from "@nestjs/common";
 import { SessionService } from "../services/session.service";
 
-export class LoginUserCommand extends Command<TLoginUserResponse> {
+type TLoginUserCommandResult = {
+    user: TCurrentUser;
+    sessionId: string;
+};
+
+export class LoginUserCommand extends Command<TLoginUserCommandResult> {
     constructor(
         public readonly data: TLoginUserRequest
     ) {
@@ -16,13 +21,13 @@ export class LoginUserCommand extends Command<TLoginUserResponse> {
 }
 
 @CommandHandler(LoginUserCommand)
-export class LoginUserCommandHandler implements ICommandHandler<LoginUserCommand, TLoginUserResponse>{
+export class LoginUserCommandHandler implements ICommandHandler<LoginUserCommand, TLoginUserCommandResult>{
     constructor(
         private readonly rlsService: RlsService,
         private readonly sessionService: SessionService,
     ) {}
 
-    async execute(command: LoginUserCommand): Promise<TLoginUserResponse> {
+    async execute(command: LoginUserCommand): Promise<TLoginUserCommandResult> {
         const userData = LoginUserRequest.assert(command.data)
        
         return this.rlsService.withUserContext({ bypassRls: true }, async (tx) => {
@@ -59,4 +64,4 @@ export class LoginUserCommandHandler implements ICommandHandler<LoginUserCommand
             };
         })
     }
-}  
+}

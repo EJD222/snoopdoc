@@ -6,6 +6,8 @@ import { DatabaseModule } from '@/database/database.module';
 import { CqrsModule } from '@nestjs/cqrs';
 import { CacheModule } from '@/features/cache/cache.module';
 import { FeaturesModule } from '@/features/features.module';
+import { HttpExceptionFilter } from './common/http-exception.filter';
+import { APP_FILTER } from '@nestjs/core';
 
 @Module({
     imports: [
@@ -16,6 +18,12 @@ import { FeaturesModule } from '@/features/features.module';
         FeaturesModule,
     ],
     controllers: [AppController],
-    providers: [AppService],
-})
+    providers: [
+        AppService,
+        {
+            provide: APP_FILTER,
+            useClass: HttpExceptionFilter,
+        },
+    ],
+    })
 export class AppModule {}
