@@ -2,7 +2,7 @@ import { Body, Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common
 import { SessionService } from './services/session.service';
 import type { FastifyReply, FastifyRequest } from 'fastify';
 import { AuthGuard } from './guards/auth.guard';
-import type { TLoginUserRequest, TRegisterUserRequest } from '@snoopdoc/types';
+import type { TLoginUserRequest, TRegisterUserRequest, TUserId } from '@snoopdoc/types';
 import { LoginUserCommand } from './commands/login-user.command';
 import { CommandBus } from '@nestjs/cqrs';
 import { RegisterUserCommand } from './commands/register-user.command';
@@ -40,6 +40,7 @@ export class AuthController {
     }
 
     @Post('logout')
+    @UseGuards(CsrfGuard)
     async logout(@Req() req: FastifyRequest) {
         const sessionId = req.session.get('sessionId');
 
@@ -62,10 +63,10 @@ export class AuthController {
     }
     
     @UseGuards(AuthGuard)
-    @Get('protected')
-    getProtected(@Req() request: FastifyRequest) {
+    @Get('me')
+    getCurrentUser(@Req() request: FastifyRequest): { userId: TUserId }  {
         return {
-            userId: request.user.id,
+            userId: request.user.id as TUserId,
         };
     }
 }
