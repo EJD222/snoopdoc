@@ -3,8 +3,10 @@
 import { Button, Card, CardContent, CardDescription, CardHeader, CardTitle, Input, Label } from "@snoopdoc/ui";
 import { login } from "../api/login";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export function LoginForm() {
+    const router = useRouter();
     const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
     const [errorMessage, setErrorMessage] = useState('');
 
@@ -28,16 +30,16 @@ export function LoginForm() {
                 email,
                 password,
             });
-
-            setStatus('success');
+            
+            router.replace('/dashboard');
         } catch (error) {
             setStatus('error');
 
-            if (error instanceof Error) {
-                setErrorMessage(error.message);
-            } else {
-                setErrorMessage('Something went wrong. Please try again.');
-            }
+            setErrorMessage(
+                error instanceof Error
+                    ? error.message
+                    : 'Unable to log out. Please try again.',
+            );
         }   
     }
 

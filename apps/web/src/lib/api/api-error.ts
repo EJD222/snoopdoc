@@ -46,10 +46,6 @@ export function normalizeApiError(error: unknown): ApiError {
         response && typeof response.status === 'number'
             ? response.status
             : undefined;
-
-    console.log('RAW ERROR:', error);
-    console.log('RESPONSE:', response);
-    console.log('BODY:', body);
     
     return new ApiError(
         message,
