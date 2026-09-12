@@ -16,6 +16,12 @@ export class RlsService {
             await tx.execute(sql`select set_config('app.user_id', ${context.userId}, true)`);
         }
 
+        if (context.role) {
+            await tx.execute(
+                sql`select set_config('app.current_user_role', ${context.role}, true)`
+            );
+        }
+
         if (context.bypassRls) {
             await tx.execute(sql`select set_config('app.bypass_rls', ${context.bypassRls}, true)`);
         }
