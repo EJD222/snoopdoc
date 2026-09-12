@@ -5,6 +5,9 @@ import { Timestamp } from "../../utils/timestamp.js";
 export type TUserId = TBrand<string, "userId">
 export const UserId: Type<TUserId> = type('string.uuid#userId');
 
+export const UserRole = type('"admin" | "user"');
+export type TUserRole = typeof UserRole.infer;
+
 export const User = type({
     '...': Timestamp,
     id: UserId,
@@ -24,6 +27,7 @@ export const User = type({
         rule: 1,
         meta: { message: 'Password must not be empty' },
     }),
+    role: UserRole
 })
 export const UserKeys = User.keyof();
 export type TUserKeys = typeof UserKeys.infer;
