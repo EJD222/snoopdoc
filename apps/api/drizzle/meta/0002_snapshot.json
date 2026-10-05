@@ -1,0 +1,370 @@
+{
+  "id": "6f14c019-e586-4362-aecc-da08e51df208",
+  "prevId": "b9fb9f08-7364-4d43-8318-f79a4fb5b2f6",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.users": {
+      "name": "users",
+      "schema": "",
+      "columns": {
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "first_name": {
+          "name": "first_name",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "last_name": {
+          "name": "last_name",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "email": {
+          "name": "email",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "password": {
+          "name": "password",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "role": {
+          "name": "role",
+          "type": "user_role",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'user'"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "users_email_unique": {
+          "name": "users_email_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "email"
+          ]
+        }
+      },
+      "policies": {
+        "users_select_policy": {
+          "name": "users_select_policy",
+          "as": "PERMISSIVE",
+          "for": "SELECT",
+          "to": [
+            "public"
+          ],
+          "using": "\n                \n    current_setting('app.bypass_rls', true) = 'true'\n\n                OR \n    current_setting('app.current_user_role', true) = 'admin'\n\n                OR \"users\".\"id\" = current_setting('app.user_id', true)::uuid\n            "
+        },
+        "users_insert_policy": {
+          "name": "users_insert_policy",
+          "as": "PERMISSIVE",
+          "for": "INSERT",
+          "to": [
+            "public"
+          ],
+          "withCheck": "\n                \n    current_setting('app.bypass_rls', true) = 'true'\n\n                OR \n    current_setting('app.current_user_role', true) = 'admin'\n\n            "
+        },
+        "users_update_policy": {
+          "name": "users_update_policy",
+          "as": "PERMISSIVE",
+          "for": "UPDATE",
+          "to": [
+            "public"
+          ],
+          "using": "\n                \n    current_setting('app.bypass_rls', true) = 'true'\n\n                OR \n    current_setting('app.current_user_role', true) = 'admin'\n\n                OR \"users\".\"id\" = current_setting('app.user_id', true)::uuid\n            "
+        },
+        "users_delete_policy": {
+          "name": "users_delete_policy",
+          "as": "PERMISSIVE",
+          "for": "DELETE",
+          "to": [
+            "public"
+          ],
+          "using": "\n                \n    current_setting('app.bypass_rls', true) = 'true'\n\n                OR \n    current_setting('app.current_user_role', true) = 'admin'\n\n            "
+        }
+      },
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.workspaces": {
+      "name": "workspaces",
+      "schema": "",
+      "columns": {
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {
+        "workspace_select_policy": {
+          "name": "workspace_select_policy",
+          "as": "PERMISSIVE",
+          "for": "SELECT",
+          "to": [
+            "public"
+          ],
+          "using": "\n                \n    current_setting('app.bypass_rls', true) = 'true'\n\n                OR \n    current_setting('app.current_user_role', true) = 'admin'\n\n                OR EXISTS (\n                    SELECT 1\n                    FROM workspace_members as wm\n                    WHERE wm.workspace_id = workspaces.id\n                        AND wm.user_id = current_setting('app.user_id', true)::uuid\n                )\n            "
+        },
+        "workspace_insert_policy": {
+          "name": "workspace_insert_policy",
+          "as": "PERMISSIVE",
+          "for": "INSERT",
+          "to": [
+            "public"
+          ],
+          "withCheck": "\n                \n    current_setting('app.bypass_rls', true) = 'true'\n\n                OR \n    current_setting('app.current_user_role', true) = 'admin'\n\n            "
+        },
+        "workspace_update_policy": {
+          "name": "workspace_update_policy",
+          "as": "PERMISSIVE",
+          "for": "UPDATE",
+          "to": [
+            "public"
+          ],
+          "using": "\n                \n    current_setting('app.bypass_rls', true) = 'true'\n\n                OR \n    current_setting('app.current_user_role', true) = 'admin'\n\n                OR EXISTS (\n                    SELECT 1\n                    FROM workspace_members wm\n                    WHERE wm.workspace_id = workspaces.id\n                        AND wm.role = 'owner'\n                        AND wm.user_id = current_setting('app.user_id', true)::uuid\n                )\n            "
+        },
+        "workspace_delete_policy": {
+          "name": "workspace_delete_policy",
+          "as": "PERMISSIVE",
+          "for": "DELETE",
+          "to": [
+            "public"
+          ],
+          "using": "\n                \n    current_setting('app.bypass_rls', true) = 'true'\n\n                OR \n    current_setting('app.current_user_role', true) = 'admin'\n\n                OR EXISTS (\n                    SELECT 1\n                    FROM workspace_members wm\n                    WHERE wm.workspace_id = workspaces.id\n                        AND wm.role = 'owner'\n                        AND wm.user_id = current_setting('app.user_id', true)::uuid\n                )\n            "
+        }
+      },
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.workspace_members": {
+      "name": "workspace_members",
+      "schema": "",
+      "columns": {
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "workspace_id": {
+          "name": "workspace_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "role": {
+          "name": "role",
+          "type": "workspace_member_role",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'member'"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "workspace_members_workspace_id_workspaces_id_fk": {
+          "name": "workspace_members_workspace_id_workspaces_id_fk",
+          "tableFrom": "workspace_members",
+          "tableTo": "workspaces",
+          "columnsFrom": [
+            "workspace_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "cascade"
+        },
+        "workspace_members_user_id_users_id_fk": {
+          "name": "workspace_members_user_id_users_id_fk",
+          "tableFrom": "workspace_members",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "cascade"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "workspace_members_workspace_user_unique": {
+          "name": "workspace_members_workspace_user_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "workspace_id",
+            "user_id"
+          ]
+        }
+      },
+      "policies": {
+        "workspace_members_select_policy": {
+          "name": "workspace_members_select_policy",
+          "as": "PERMISSIVE",
+          "for": "SELECT",
+          "to": [
+            "public"
+          ],
+          "using": "\n                \n    current_setting('app.bypass_rls', true) = 'true'\n\n                OR \n    current_setting('app.current_user_role', true) = 'admin'\n\n                OR EXISTS (\n                    SELECT 1\n                    FROM workspace_members wm\n                    WHERE wm.workspace_id = \"workspace_members\".\"workspace_id\"\n                        AND wm.user_id = \n    current_setting('app.user_id', true)::uuid\n\n                )\n            "
+        },
+        "workspace__members_insert_policy": {
+          "name": "workspace__members_insert_policy",
+          "as": "PERMISSIVE",
+          "for": "INSERT",
+          "to": [
+            "public"
+          ],
+          "withCheck": "\n                \n    current_setting('app.bypass_rls', true) = 'true'\n\n                OR \n    current_setting('app.current_user_role', true) = 'admin'\n\n                OR EXISTS (\n                    SELECT 1\n                    FROM workspace_members wm\n                    WHERE wm.workspace_id = \"workspace_members\".\"workspace_id\"\n                        AND wm.user_id = \n    current_setting('app.user_id', true)::uuid\n\n                        AND wm.role = 'owner'\n                )\n            "
+        },
+        "workspace_members_update_policy": {
+          "name": "workspace_members_update_policy",
+          "as": "PERMISSIVE",
+          "for": "UPDATE",
+          "to": [
+            "public"
+          ],
+          "using": "\n                \n    current_setting('app.bypass_rls', true) = 'true'\n\n                OR \n    current_setting('app.current_user_role', true) = 'admin'\n\n                OR EXISTS (\n                    SELECT 1\n                    FROM workspace_members wm\n                    WHERE wm.workspace_id = \"workspace_members\".\"workspace_id\"\n                        AND wm.user_id = \n    current_setting('app.user_id', true)::uuid\n\n                        AND wm.role = 'owner'\n                )\n            "
+        },
+        "workspace_members_delete_policy": {
+          "name": "workspace_members_delete_policy",
+          "as": "PERMISSIVE",
+          "for": "DELETE",
+          "to": [
+            "public"
+          ],
+          "using": "\n                \n    current_setting('app.bypass_rls', true) = 'true'\n\n                OR \n    current_setting('app.current_user_role', true) = 'admin'\n\n                OR EXISTS (\n                    SELECT 1\n                    FROM workspace_members wm\n                    WHERE wm.workspace_id = \"workspace_members\".\"workspace_id\"\n                        AND wm.user_id = \n    current_setting('app.user_id', true)::uuid\n\n                        AND wm.role = 'owner'\n                )\n            "
+        }
+      },
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {
+    "public.user_role": {
+      "name": "user_role",
+      "schema": "public",
+      "values": [
+        "admin",
+        "user"
+      ]
+    },
+    "public.workspace_member_role": {
+      "name": "workspace_member_role",
+      "schema": "public",
+      "values": [
+        "admin",
+        "owner",
+        "member"
+      ]
+    }
+  },
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

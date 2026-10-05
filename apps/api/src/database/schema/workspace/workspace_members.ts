@@ -1,10 +1,10 @@
 import { TUserId, TWorkspaceId, TWorkspaceMemberId, TWorkspaceMemberKeys } from "@snoopdoc/types";
-import { pgPolicy, pgTable, timestamp, unique, uuid, varchar } from "drizzle-orm/pg-core";
+import { pgPolicy, pgTable, timestamp, unique, uuid } from "drizzle-orm/pg-core";
 import { workspacesTable } from "./workspaces";
 import { usersTable } from "../users";
 import { pgEnum } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
-import { currentUserId, isCurrentUserAdmin, isRlsBypassed } from "@/database/utils/rls.util";
+import { currentUserId, isCurrentUserAdmin, isRlsBypassed } from "../../utils/rls.util";
 
 export const workspaceMemberRoleEnum = pgEnum(
     'workspace_member_role',

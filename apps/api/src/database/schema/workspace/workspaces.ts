@@ -1,4 +1,4 @@
-import { isCurrentUserAdmin, isRlsBypassed } from "@/database/utils/rls.util";
+import { isCurrentUserAdmin, isRlsBypassed } from "../../utils/rls.util";
 import { TWorkspaceId, TWorkspaceKeys } from "@snoopdoc/types";
 import { sql } from "drizzle-orm";
 import { pgPolicy } from "drizzle-orm/pg-core";
