@@ -7,12 +7,12 @@ import { verifyPassword } from "../utils/hash.util";
 import { UnauthorizedException } from "@nestjs/common";
 import { SessionService } from "../services/session.service";
 
-type TLoginUserCommandResult = {
+type TLoginUserResult = {
     user: TCurrentUser;
     sessionId: string;
 };
 
-export class LoginUserCommand extends Command<TLoginUserCommandResult> {
+export class LoginUserCommand extends Command<TLoginUserResult> {
     constructor(
         public readonly data: TLoginUserRequest
     ) {
@@ -21,13 +21,13 @@ export class LoginUserCommand extends Command<TLoginUserCommandResult> {
 }
 
 @CommandHandler(LoginUserCommand)
-export class LoginUserCommandHandler implements ICommandHandler<LoginUserCommand, TLoginUserCommandResult>{
+export class LoginUserCommandHandler implements ICommandHandler<LoginUserCommand, TLoginUserResult>{
     constructor(
         private readonly rlsService: RlsService,
         private readonly sessionService: SessionService,
     ) {}
 
-    async execute(command: LoginUserCommand): Promise<TLoginUserCommandResult> {
+    async execute(command: LoginUserCommand): Promise<TLoginUserResult> {
         const userData = LoginUserRequest.assert(command.data)
        
         return this.rlsService.withUserContext({ bypassRls: true }, async (tx) => {
@@ -59,6 +59,7 @@ export class LoginUserCommandHandler implements ICommandHandler<LoginUserCommand
                     email: existingUser.email,
                     firstName: existingUser.firstName,
                     lastName: existingUser.lastName,
+                    role: existingUser.role
                 }),
                 sessionId,
             };
