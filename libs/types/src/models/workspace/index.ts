@@ -1,2 +1,2 @@
 export * from './workspace.js'
-export * from './workspace-members.js'
+export * from './workspace-member.js'
