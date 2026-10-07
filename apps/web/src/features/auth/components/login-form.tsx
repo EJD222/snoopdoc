@@ -30,7 +30,7 @@ export function LoginForm() {
                 email,
                 password,
             });
-            
+
             router.replace('/dashboard');
         } catch (error) {
             setStatus('error');
@@ -40,7 +40,7 @@ export function LoginForm() {
                     ? error.message
                     : 'Unable to log out. Please try again.',
             );
-        }   
+        }
     }
 
     const isSubmitting = status === 'submitting';
@@ -58,19 +58,19 @@ export function LoginForm() {
             </CardHeader>
 
             <CardContent>
-                <form 
+                <form
                     className="flex flex-col gap-5"
                     onSubmit={handleSubmit}
                 >
 
-                {status === 'error' && (
-                    <p role="alert" className="text-sm text-destructive">
-                        {errorMessage}
-                    </p>
-                )}
+                    {status === 'error' && (
+                        <p role="alert" className="text-sm text-destructive">
+                            {errorMessage}
+                        </p>
+                    )}
 
-                <div className="flex flex-col gap-2">
-                    <Label htmlFor="email">Email</Label>
+                    <div className="flex flex-col gap-2">
+                        <Label htmlFor="email">Email</Label>
                         <Input
                             id="email"
                             name="email"

@@ -21,7 +21,5 @@ export async function requestData<T>(request: ApiRequest<T>): Promise<T> {
         return response.data;
     } catch (error: unknown) {
         throw normalizeApiError(error);
-
-        
     }
 }
