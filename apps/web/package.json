@@ -2,14 +2,29 @@
   "name": "@snoopdoc/web",
   "version": "0.0.1",
   "private": true,
+  "nx": {
+    "targets": {
+      "dev": {
+        "executor": "nx:run-commands",
+        "options": {
+          "cwd": "apps/web",
+          "command": "next dev --webpack"
+        },
+        "continuous": true
+      }
+    }
+  },
   "dependencies": {
+    "@hookform/resolvers": "^5.9.1",
     "@snoopdoc/types": "workspace:*",
     "@snoopdoc/ui": "workspace:*",
     "@tailwindcss/postcss": "^4.3.3",
+    "lucide-react": "^1.40.0",
     "next": "~16.1.6",
     "postcss": "^8.5.27",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-hook-form": "^7.89.0",
     "tailwindcss": "^4.3.3",
     "xior": "^0.8.4"
   }
