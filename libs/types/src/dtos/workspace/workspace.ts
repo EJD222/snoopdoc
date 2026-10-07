@@ -4,6 +4,7 @@ import { Workspace } from "../../models/index.js";
 
 export const CreateWorkspaceRequest = type({
     name: type('string'),
+    description: type('string').atLeastLength(1).atMostLength(2500).optional(),
     members: WorkspaceMember.omit(
         'id',
         'createdAt',

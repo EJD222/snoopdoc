@@ -10,7 +10,7 @@ export const WorkspaceMemberId: Type<TWorkspaceMemberId> = type('string.uuid#wor
 export const WorkspaceMember = type({
     '...': Timestamp,
     id: WorkspaceMemberId,
-    workspaceId: WorkspaceId, 
+    workspaceId: WorkspaceId,
     userId: UserId,
     role: type('string')
 });

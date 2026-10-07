@@ -8,7 +8,8 @@ export const WorkspaceId: Type<TWorkspaceId> = type('string.uuid#workspaceId');
 export const Workspace = type({
     '...': Timestamp,
     id: WorkspaceId,
-    name: type('string')
+    name: type('string'),
+    description: type('string').atLeastLength(1).atMostLength(2500).optional(),
 });
 export const WorkspaceKeys = Workspace.keyof();
 export type TWorkspaceKeys = typeof WorkspaceKeys.infer;
