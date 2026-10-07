@@ -3,6 +3,7 @@ import { Command, CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 import { CreateWorkspaceRequest, CreateWorkspaceResult, TCreateWorkspaceRequest, TCreateWorkspaceResult } from "@snoopdoc/types";
 import * as schema from '@/database/schema';
 import { eq } from "drizzle-orm";
+import { ConflictException } from "@nestjs/common";
 
 export class CreateWorkspaceCommand extends Command<TCreateWorkspaceResult>{
     constructor(
@@ -28,8 +29,8 @@ export class CreateWorkspaceCommandHandler implements ICommandHandler<CreateWork
                 .where(eq(schema.workspacesTable.name, workspaceData.name))
                 .limit(1);
 
-            if(!existingWorkspace) {
-                throw new Error(
+            if(existingWorkspace) {
+                throw new ConflictException(
                     `Workspace with name ${workspaceData.name} already exists.`
                 );
             }
