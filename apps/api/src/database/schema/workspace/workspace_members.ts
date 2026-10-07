@@ -16,7 +16,7 @@ export const workspaceMembersTable = pgTable(
     {
         createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
         updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
-        deletedAt: timestamp('deleted_at', { withTimezone: true}),
+        deletedAt: timestamp('deleted_at', { withTimezone: true }),
         id: uuid('id').$type<TWorkspaceMemberId>().defaultRandom().primaryKey(),
         workspaceId: uuid('workspace_id').$type<TWorkspaceId>()
             .notNull()

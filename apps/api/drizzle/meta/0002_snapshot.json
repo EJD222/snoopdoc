@@ -1,5 +1,5 @@
 {
-  "id": "6f14c019-e586-4362-aecc-da08e51df208",
+  "id": "3951a39f-b511-4fcb-9f3c-592f620bb536",
   "prevId": "b9fb9f08-7364-4d43-8318-f79a4fb5b2f6",
   "version": "7",
   "dialect": "postgresql",
@@ -157,12 +157,26 @@
           "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
+      "uniqueConstraints": {
+        "workspaces_name_unique": {
+          "name": "workspaces_name_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "name"
+          ]
+        }
+      },
       "policies": {
         "workspace_select_policy": {
           "name": "workspace_select_policy",
@@ -171,7 +185,7 @@
           "to": [
             "public"
           ],
-          "using": "\n                \n    current_setting('app.bypass_rls', true) = 'true'\n\n                OR \n    current_setting('app.current_user_role', true) = 'admin'\n\n                OR EXISTS (\n                    SELECT 1\n                    FROM workspace_members as wm\n                    WHERE wm.workspace_id = workspaces.id\n                        AND wm.user_id = current_setting('app.user_id', true)::uuid\n                )\n            "
+          "using": "\n                \n    current_setting('app.bypass_rls', true) = 'true'\n\n                OR \n    current_setting('app.current_user_role', true) = 'admin'\n\n                OR is_workspace_member(\"workspaces\".\"id\")\n            "
         },
         "workspace_insert_policy": {
           "name": "workspace_insert_policy",
@@ -189,7 +203,7 @@
           "to": [
             "public"
           ],
-          "using": "\n                \n    current_setting('app.bypass_rls', true) = 'true'\n\n                OR \n    current_setting('app.current_user_role', true) = 'admin'\n\n                OR EXISTS (\n                    SELECT 1\n                    FROM workspace_members wm\n                    WHERE wm.workspace_id = workspaces.id\n                        AND wm.role = 'owner'\n                        AND wm.user_id = current_setting('app.user_id', true)::uuid\n                )\n            "
+          "using": "\n                \n    current_setting('app.bypass_rls', true) = 'true'\n\n                OR \n    current_setting('app.current_user_role', true) = 'admin'\n\n                OR is_workspace_owner(\"workspaces\".\"id\")\n            "
         },
         "workspace_delete_policy": {
           "name": "workspace_delete_policy",
@@ -198,7 +212,7 @@
           "to": [
             "public"
           ],
-          "using": "\n                \n    current_setting('app.bypass_rls', true) = 'true'\n\n                OR \n    current_setting('app.current_user_role', true) = 'admin'\n\n                OR EXISTS (\n                    SELECT 1\n                    FROM workspace_members wm\n                    WHERE wm.workspace_id = workspaces.id\n                        AND wm.role = 'owner'\n                        AND wm.user_id = current_setting('app.user_id', true)::uuid\n                )\n            "
+          "using": "\n                \n    current_setting('app.bypass_rls', true) = 'true'\n\n                OR \n    current_setting('app.current_user_role', true) = 'admin'\n\n                OR is_workspace_owner(\"workspaces\".\"id\")\n            "
         }
       },
       "checkConstraints": {},
@@ -304,7 +318,7 @@
           "to": [
             "public"
           ],
-          "using": "\n                \n    current_setting('app.bypass_rls', true) = 'true'\n\n                OR \n    current_setting('app.current_user_role', true) = 'admin'\n\n                OR EXISTS (\n                    SELECT 1\n                    FROM workspace_members wm\n                    WHERE wm.workspace_id = \"workspace_members\".\"workspace_id\"\n                        AND wm.user_id = \n    current_setting('app.user_id', true)::uuid\n\n                )\n            "
+          "using": "\n                \n    current_setting('app.bypass_rls', true) = 'true'\n\n                OR \n    current_setting('app.current_user_role', true) = 'admin'\n\n                OR \n    current_setting('app.user_id', true)::uuid\n = \"workspace_members\".\"user_id\"\n            "
         },
         "workspace__members_insert_policy": {
           "name": "workspace__members_insert_policy",

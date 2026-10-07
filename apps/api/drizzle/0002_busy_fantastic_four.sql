@@ -4,7 +4,9 @@ CREATE TABLE "workspaces" (
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"deleted_at" timestamp with time zone,
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"name" varchar(255) NOT NULL
+	"name" varchar(255) NOT NULL,
+	"description" text,
+	CONSTRAINT "workspaces_name_unique" UNIQUE("name")
 );
 --> statement-breakpoint
 ALTER TABLE "workspaces" ENABLE ROW LEVEL SECURITY;--> statement-breakpoint
@@ -22,6 +24,36 @@ CREATE TABLE "workspace_members" (
 ALTER TABLE "workspace_members" ENABLE ROW LEVEL SECURITY;--> statement-breakpoint
 ALTER TABLE "workspace_members" ADD CONSTRAINT "workspace_members_workspace_id_workspaces_id_fk" FOREIGN KEY ("workspace_id") REFERENCES "public"."workspaces"("id") ON DELETE cascade ON UPDATE cascade;--> statement-breakpoint
 ALTER TABLE "workspace_members" ADD CONSTRAINT "workspace_members_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE cascade;--> statement-breakpoint
+
+CREATE OR REPLACE FUNCTION public.is_workspace_member(target_workspace_id uuid)
+RETURNS boolean
+LANGUAGE sql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+    SELECT EXISTS (
+        SELECT 1
+        FROM public.workspace_members wm
+        WHERE wm.workspace_id = target_workspace_id
+          AND wm.user_id = current_setting('app.user_id', true)::uuid
+    );
+$$;
+
+CREATE OR REPLACE FUNCTION public.is_workspace_owner(target_workspace_id uuid)
+RETURNS boolean
+LANGUAGE sql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+    SELECT EXISTS (
+        SELECT 1
+        FROM public.workspace_members wm
+        WHERE wm.workspace_id = target_workspace_id
+          AND wm.user_id = current_setting('app.user_id', true)::uuid
+          AND wm.role = 'owner'
+    );
+$$;
+
 CREATE POLICY "workspace_select_policy" ON "workspaces" AS PERMISSIVE FOR SELECT TO public USING (
                 
     current_setting('app.bypass_rls', true) = 'true'
@@ -29,12 +61,7 @@ CREATE POLICY "workspace_select_policy" ON "workspaces" AS PERMISSIVE FOR SELECT
                 OR 
     current_setting('app.current_user_role', true) = 'admin'
 
-                OR EXISTS (
-                    SELECT 1
-                    FROM workspace_members as wm
-                    WHERE wm.workspace_id = workspaces.id
-                        AND wm.user_id = current_setting('app.user_id', true)::uuid
-                )
+                OR is_workspace_member("workspaces"."id")
             );--> statement-breakpoint
 CREATE POLICY "workspace_insert_policy" ON "workspaces" AS PERMISSIVE FOR INSERT TO public WITH CHECK (
                 
@@ -51,13 +78,7 @@ CREATE POLICY "workspace_update_policy" ON "workspaces" AS PERMISSIVE FOR UPDATE
                 OR 
     current_setting('app.current_user_role', true) = 'admin'
 
-                OR EXISTS (
-                    SELECT 1
-                    FROM workspace_members wm
-                    WHERE wm.workspace_id = workspaces.id
-                        AND wm.role = 'owner'
-                        AND wm.user_id = current_setting('app.user_id', true)::uuid
-                )
+                OR is_workspace_owner("workspaces"."id")
             );--> statement-breakpoint
 CREATE POLICY "workspace_delete_policy" ON "workspaces" AS PERMISSIVE FOR DELETE TO public USING (
                 
@@ -66,13 +87,7 @@ CREATE POLICY "workspace_delete_policy" ON "workspaces" AS PERMISSIVE FOR DELETE
                 OR 
     current_setting('app.current_user_role', true) = 'admin'
 
-                OR EXISTS (
-                    SELECT 1
-                    FROM workspace_members wm
-                    WHERE wm.workspace_id = workspaces.id
-                        AND wm.role = 'owner'
-                        AND wm.user_id = current_setting('app.user_id', true)::uuid
-                )
+                OR is_workspace_owner("workspaces"."id")
             );--> statement-breakpoint
 CREATE POLICY "workspace_members_select_policy" ON "workspace_members" AS PERMISSIVE FOR SELECT TO public USING (
                 
@@ -81,14 +96,9 @@ CREATE POLICY "workspace_members_select_policy" ON "workspace_members" AS PERMIS
                 OR 
     current_setting('app.current_user_role', true) = 'admin'
 
-                OR EXISTS (
-                    SELECT 1
-                    FROM workspace_members wm
-                    WHERE wm.workspace_id = "workspace_members"."workspace_id"
-                        AND wm.user_id = 
+                OR 
     current_setting('app.user_id', true)::uuid
-
-                )
+ = "workspace_members"."user_id"
             );--> statement-breakpoint
 CREATE POLICY "workspace__members_insert_policy" ON "workspace_members" AS PERMISSIVE FOR INSERT TO public WITH CHECK (
                 
