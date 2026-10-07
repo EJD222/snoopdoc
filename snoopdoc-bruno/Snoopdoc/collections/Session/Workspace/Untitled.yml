@@ -1,11 +1,17 @@
 info:
-  name: Get Protected
+  name: Untitled
   type: http
-  seq: 3
+  seq: 1
 
 http:
-  method: GET
-  url: "{{baseUrl}}/auth/protected"
+  method: POST
+  url: "{{baseUrl}}/workspaces"
+  body:
+    type: json
+    data: |-
+      {
+        "name": "Workspace Test"
+      }
   auth: inherit
 
 settings:
